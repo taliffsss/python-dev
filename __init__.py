@@ -72,7 +72,7 @@ def login_page():
                     uid = get_id(uname)
                     tracked_loggedin(uid)
                     flash("You are now logged in")
-                    return redirect(url_for("homepage"))
+                    return redirect(url_for("dashboard"))
 
                 else:
                     error = "Invalid credentials, try again."
@@ -139,16 +139,14 @@ def register_page():
         return(str(e))
 
 
-@app.route('/slashboard/')
-def slashboard():
-    try:
-        return render_template("home.html", TOPIC_DICT = shamwow)
-    except Exception as e:
-	    return render_template("500.html", error = str(e))
+@app.route('/dashboard/')
+@login_required
+def dashboard():
+    return render_template("admin/dashboard.html",title="Dashboard")
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("page_not_found.html")
+    return render_template("error/page_not_found.html")
 
 if __name__ == "__main__":
     app.secret_key = '$5$rounds=535000$LjDiH2YmB1rSkSNi$0ZJznZe32eIAcvHvrh5/vIEmWWXTs8SPND7oFypdog6'

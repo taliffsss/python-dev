@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="fontawesome-i2svg-pending">
+	<head>
+		<title>{{title}} | Python</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name='robots' content='noindex,nofollow' />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	</head>
+	<header>
+		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+			<a class="navbar-brand" href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<span></span>
+					</li>
+					<li class="nav-item">
+						<span></span>
+					</li>
+				</ul>
+				<div class="mr-sm-4">
+					<ul class="navbar-nav mr-sm-2">
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="info-setting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{{ session.username }}
+							</a>
+							<div class="dropdown-menu info-dropdown" aria-labelledby="info-setting">
+								<a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i> Settings</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<body>
+		<div class="nav-side-menu">
+			<div class="brand">Brand Logo</div>
+			<i class="fas fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+			<div class="menu-list">
+				<ul id="menu-content" class="menu-content collapse out">
+					<li  data-toggle="collapse" data-target="#products">
+						<a href="#"><i class="fas fa-gift"></i> UI Elements <span class="arrow"></span></a>
+					</li>
+					<ul class="sub-menu collapse" id="products">
+						<li class="active"><a href="#">CSS3 Animation</a></li>
+						<li><a href="#">General</a></li>
+						<li><a href="#">Buttons</a></li>
+					</ul>
+					<li data-toggle="collapse" data-target="#service" class="collapsed">
+						<a href="#"><i class="fas fa-globe"></i> Services <span class="arrow"></span></a>
+					</li>
+					<ul class="sub-menu collapse" id="service">
+						<li>New Service 1</li>
+						<li>New Service 1</li>
+						<li>New Service 1</li>
+					</ul>
+					<li data-toggle="collapse" data-target="#new" class="collapsed">
+						<a href="#"><i class="fas fa-car"></i> New <span class="arrow"></span></a>
+					</li>
+					<ul class="sub-menu collapse" id="new">
+						<li>New New 1</li>
+						<li>New New 1</li>
+						<li>New New 1</li>
+						<li>New New 1</li>
+					</ul>
+					<li>
+						<a href="#">
+							<i class="fas fa-user"></i> Profile
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<i class="fas fa-users"></i> Users
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<br>
+		<div class="container">
+			{% block body %} {% endblock %}
+		</div>
+	</body>
+	<br>
+	<footer>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/function.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/fontawesome-all.js') }}"></script>
+	</footer>
+</html>
