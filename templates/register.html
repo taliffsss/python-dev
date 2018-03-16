@@ -68,6 +68,30 @@
 						</div>  
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-lg-6 col-sm-6 col-12">
+						<div class="form-group">
+							<label class="text-inverse" for="validationCustom03">Address</label>
+							{{form.address(class_="form-control",placeholder="Your Address",required="required")}}
+							<div class="invalid-feedback">
+								Please provide a valid city.
+							</div>
+						</div>  
+					</div>
+					<div class="col-lg-6 col-sm-6 col-12">
+						<div class="form-group">
+							<label class="text-inverse" for="select-menu">Select Role</label>
+							<select name="role" class="custom-select d-block form-control" id="image" required>
+								{% for roles in role %}
+									<option value="{{roles[0]}}">{{roles[1]}}</option>
+								{% endfor%}
+							</select>
+							<div class="invalid-feedback">
+								Please selected any option.
+							</div>
+						</div>  
+					</div>
+				</div>
 				<hr>
 				<div class="row">
 					<div class="col-lg-12 col-sm-12 col-12 text-center">
