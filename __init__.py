@@ -1,3 +1,4 @@
+from __future__ import print_function
 from flask import Flask, render_template, flash, request, url_for, redirect, session, send_from_directory
 from flask_wtf import FlaskForm
 import os
@@ -17,6 +18,8 @@ from pytz import timezone
 from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
+import subprocess
+import requests
 
 now = datetime.datetime.now()
 
@@ -28,8 +31,8 @@ y = now.year
 TOPIC_DICT = Content()
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+fpath = app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+fmax = app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 @app.route('/')
 def homepage():
@@ -59,25 +62,15 @@ def logout():
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
         file = request.files['file']
-        return redirect(url_for('login_page'))
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(url_for('login_page'))
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(fpath, filename))
             return redirect(url_for('login_page'))
     return ''
 
