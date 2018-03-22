@@ -1,0 +1,36 @@
+.tooltip-inner {
+    white-space:pre-wrap !important;
+}
+footer{
+	color: #fff;
+	/*position: fixed;
+    height: 100px;*/
+    bottom: 0;
+    width: 100%;
+}
+footer a{
+	color: #bfffff;
+}
+footer a:hover{
+	color: white;
+}
+
+.footer-bottom{
+	background: #3d6277;
+	padding: 1em;
+	text-align: center;
+	position:relative;
+}
+
+#banner {
+	width: 100% !important;
+	height: 350px !important;
+}
+
+#img-pic {
+	width: 10%;
+    height: auto;
+    position: relative;
+    margin-left: 43%;
+    margin-top: -8%;
+}

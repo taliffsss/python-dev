@@ -10,8 +10,7 @@ from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 from functools import wraps
 import gc
-from urllib import parse
-import time
+from selenium import webdriver
 import datetime
 import pytz
 from pytz import timezone
@@ -19,7 +18,14 @@ from model import check_username, get_id, tracked_loggedin, logout_update, regis
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import subprocess
-import requests
+from flask_mail import Mail
+from flask_bootstrap import Bootstrap
+
+# MAIL_SERVER=smtp.googlemail.com
+# MAIL_PORT=587
+# MAIL_USE_TLS=1
+# MAIL_USERNAME=<your-gmail-username>
+# MAIL_PASSWORD=<your-gmail-password>
 
 now = datetime.datetime.now()
 
@@ -31,12 +37,16 @@ y = now.year
 TOPIC_DICT = Content()
 
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
+
+#mail = Mail(app)
+
 fpath = app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 fmax = app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 @app.route('/')
 def homepage():
-	return render_template("home.html", TOPIC_DICT = TOPIC_DICT, title="Home")
+	return render_template("home.html", TOPIC_DICT = TOPIC_DICT, title="Home", y=y)
 
 def login_required(f):
     @wraps(f)

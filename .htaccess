@@ -1,0 +1,2 @@
+AddHandler mod_python
+PythonHandler mod_python.publisher
