@@ -8,6 +8,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	</head>
 	<body>
@@ -19,7 +20,7 @@
 			<div class="row">
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend class="list-group-item list-group-item-action active">Programming Language</legend>
+						<legend class="list-group-item list-group-item-action active"><i class="fa fa-language" aria-hidden="true"></i> Programming Language</legend>
 						{% for p in TOPIC_DICT["Programming"] %}
 							<a class="list-group-item list-group-item-action" href="{{ p[1] }}">{{ p[0] }}</a>
 						{% endfor %}
@@ -27,7 +28,7 @@
 				</div>
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend class="list-group-item list-group-item-action active">Databases</legend>
+						<legend class="list-group-item list-group-item-action active"><i class="fa fa-database" aria-hidden="true"></i> Databases</legend>
 						<span class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" role="tab" aria-controls="home">MySQL</span>
 						<span class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" role="tab" aria-controls="profile">MSSQL</span>
 						<span class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" role="tab" aria-controls="messages">SQLite</span>
@@ -36,7 +37,7 @@
 				</div>
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend class="list-group-item list-group-item-action active">Frameworks</legend>
+						<legend class="list-group-item list-group-item-action active"><i class="fa fa-folder"></i> Frameworks</legend>
 						{% for f in TOPIC_DICT["Frameworks"] %}
 							<span class="list-group-item list-group-item-action" data-placement="right" data-toggle="tooltip" title="{{ f[1] }}">{{ f[0] }}</span>
 						{% endfor %}
@@ -49,7 +50,7 @@
 			<div class="row">
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend class="list-group-item list-group-item-action active">Character References</legend>
+						<legend class="list-group-item list-group-item-action active"><i class="fa fa-address-card" aria-hidden="true"></i> Character References</legend>
 						{% for r in TOPIC_DICT["References"] %}
 							<span class="list-group-item list-group-item-action" data-placement="left" data-toggle="tooltip" title="{{ r[1] }}">{{ r[0] }}</span>
 						{% endfor %}
@@ -57,7 +58,7 @@
 				</div>
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend class="list-group-item list-group-item-action active">Previous Company</legend>
+						<legend class="list-group-item list-group-item-action active"><i class="fa fa-building" aria-hidden="true"></i> Previous Company</legend>
 						{% for c in TOPIC_DICT["Company"] %}
 							<span class="list-group-item list-group-item-action" data-placement="left" data-toggle="tooltip" title="{{ c[1] }}">{{ c[0] }}</span>
 						{% endfor %}
@@ -65,7 +66,7 @@
 				</div>
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend class="list-group-item list-group-item-action active">Accomplishment</legend>
+						<legend class="list-group-item list-group-item-action active"><i class="fa fa-trophy"></i> Accomplishment</legend>
 						{% for a in TOPIC_DICT["Accomplishment"] %}
 							<a class="list-group-item list-group-item-action" href="{{ a[1] }}">{{ a[0] }}</a>
 						{% endfor %}
@@ -78,7 +79,7 @@
 			<div class="row">
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend class="list-group-item list-group-item-action active">Contact me</legend>
+						<legend class="list-group-item list-group-item-action active"><i class="fa fa-phone" aria-hidden="true"></i> Contact me</legend>
 						{% for m in TOPIC_DICT["Contactme"] %}
 							<a class="list-group-item list-group-item-action" href="{{ m[1] }}">{{ m[0] }}</a>
 						{% endfor %}
@@ -86,7 +87,7 @@
 				</div>
 				<div class="col-8">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend>Message me</legend>
+						<legend><i class="fa fa-envelope-o" aria-hidden="true"></i> Message me</legend>
 						<form action="" method="POST">
 							<input type="text" name="name" placeholder="Your Name" class="form-control">
 							<textarea placeholder="Your Message" class="form-control"></textarea>
