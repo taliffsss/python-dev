@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Python Programming Language</title>
+		<title>Mark Anthony Naluz</title>
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name='robots' content='noindex,nofollow' />
@@ -17,6 +17,26 @@
 		<br>
 		<br>
 		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-6 mx-auto">
+							{% with messages = get_flashed_messages() %}
+								{% if messages %}
+									{% for message in messages %}
+										<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+											{{message}}
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="row">
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
@@ -37,7 +57,7 @@
 				</div>
 				<div class="col-4">
 					<div class="list-group" id="list-tab" role="tablist">
-						<legend class="list-group-item list-group-item-action active"><i class="fas fa-folder"></i> Frameworks</legend>
+						<legend class="list-group-item list-group-item-action active"><i class="fa fa-folder"></i> Frameworks</legend>
 						{% for f in TOPIC_DICT["Frameworks"] %}
 							<span class="list-group-item list-group-item-action" data-placement="right" data-toggle="tooltip" title="{{ f[1] }}">{{ f[0] }}</span>
 						{% endfor %}
@@ -88,9 +108,11 @@
 				<div class="col-8">
 					<div class="list-group" id="list-tab" role="tablist">
 						<legend><i class="fa fa-envelope-o" aria-hidden="true"></i> Message me</legend>
-						<form action="" method="POST">
-							<input type="text" name="name" placeholder="Your Name" class="form-control">
-							<textarea placeholder="Your Message" class="form-control"></textarea>
+						{% from "_formhelpers.html" import render_field %}
+						<form action="/" method="POST">
+							{{ form.csrf_token }}
+							{{form.name(class_="form-control",placeholder="First Name",required="required")}}
+							{{form.messageme(class_="form-control",placeholder="Last Name",required="required")}}
 							<br />
 							<input type="submit" name="submit" class="btn btn-info">
 						</form>

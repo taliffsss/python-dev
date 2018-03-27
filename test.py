@@ -1,6 +1,12 @@
+from conn import connection, failover
 
-from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role
+#Set Database Connection
+c, conn = connection()
 
-role = get_role()
+#set Database connection Failover
+e, catch = failover()
 
-print(list(role))
+data = c.execute("SELECT DISTINCT ip FROM webhooks")
+count = c.rowcount
+
+print(count)

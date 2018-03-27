@@ -142,3 +142,7 @@
     display: block;
   }
 }
+
+#unread {
+  color: #fff !important;
+}

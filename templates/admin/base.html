@@ -10,6 +10,8 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" rel="stylesheet">
+		<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 	</head>
 	<header>
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -26,6 +28,21 @@
 						<span></span>
 					</li>
 				</ul>
+				<span id="unread">Visitors of the Day <small class="badge badge-danger">{{visit}}</small></span>
+				<div class="dropdown show mr-sm-4">
+					<a class="nav-link" href="#" id="unread" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Notifications <span class="badge badge-danger">{{s}}</span>
+					</a>
+					{% for u in unread %}
+						<div class="dropdown-menu" aria-labelledby="unread">
+					{% endfor%}
+							{% for u in unread %}
+								<a class="dropdown-item" href="/messages/{{u[0]}}"> {{u[1]}} </a>
+							{% endfor%}
+					{% for u in unread %}
+						</div>
+					{% endfor%}
+				</div>
 				<div class="mr-sm-4">
 					<ul class="navbar-nav mr-sm-2">
 						<li class="nav-item dropdown">
@@ -35,7 +52,7 @@
 							<div class="dropdown-menu info-dropdown" aria-labelledby="info-setting">
 								<a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i> Settings</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+								<a class="dropdown-item" href="/port-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 							</div>
 						</li>
 					</ul>
@@ -44,7 +61,7 @@
 		</nav>
 	</header>
 	<body>
-		<div class="nav-side-menu bg-dark">
+		<!--<div class="nav-side-menu bg-dark">
 			<div class="brand">Brand Logo</div>
 			<i class="fas fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
 			<div class="menu-list">
@@ -86,7 +103,7 @@
 					</li>
 				</ul>
 			</div>
-		</div>
+		</div>-->
 		<br>
 		<div class="container">
 			{% block body %} {% endblock %}
@@ -94,10 +111,13 @@
 	</body>
 	<br>
 	<footer>
+
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/function.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/fontawesome-all.js') }}"></script>
+		<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 	</footer>
 </html>

@@ -1,25 +1,31 @@
 from __future__ import print_function
-from flask import Flask, render_template, flash, request, url_for, redirect, session, send_from_directory, jsonify, Blueprint
+from flask import Flask, render_template, flash, request, url_for, redirect, session, send_from_directory
 from flask_wtf import FlaskForm
 import os
 from cms import Content
+from conn import connection
 from wtforms import Form, BooleanField, TextField, PasswordField, validators, StringField, ValidationError, SelectField
-from wtforms.widgets import TextArea
 from wtforms.validators import DataRequired
 from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 from functools import wraps
+
 import gc
 import datetime
 import pytz
 from pytz import timezone
-from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll
+from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import subprocess
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
-from flask_paginate import Pagination, get_page_parameter
+
+# MAIL_SERVER=smtp.googlemail.com
+# MAIL_PORT=587
+# MAIL_USE_TLS=1
+# MAIL_USERNAME=<your-gmail-username>
+# MAIL_PASSWORD=<your-gmail-password>
 
 now = datetime.datetime.now()
 
@@ -32,6 +38,8 @@ TOPIC_DICT = Content()
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
+
+#mail = Mail(app)
 
 fpath = app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 fmax = app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -47,11 +55,11 @@ def homepage():
         if request.method == "POST" and form.validate():
             name  = form.name.data
             msg = form.messageme.data
-            flash("Your message has been submit")
+
             msgme(name,msg)
+
             return redirect(url_for("homepage"))
 
-        webhook()
         return render_template("home.html", TOPIC_DICT = TOPIC_DICT, title="Home", y=y, form=form)
     except Exception as e:
         return(str(e))
@@ -67,13 +75,12 @@ def login_required(f):
 
     return wrap
 
-@app.route("/port-logout/")
+@app.route("/logout/")
 @login_required
 def logout():
     uname = session['username']
     uid = get_id(uname)
     logout_update(uid)
-    webhook()
     session.clear()
     flash("You have been logged out!")
     gc.collect()
@@ -97,7 +104,7 @@ class loginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = StringField('Password', validators=[DataRequired()])
 
-@app.route('/port-login/', methods=["GET","POST"])
+@app.route('/login/', methods=["GET","POST"])
 def login_page():
     error = ''
     try:
@@ -122,7 +129,7 @@ def login_page():
                     error = "Invalid credentials, try again."
 
             gc.collect()
-            webhook()
+
             return render_template("login.html", error=error,title="Login",y=y,form=form)
 
     except Exception as e:
@@ -131,6 +138,7 @@ def login_page():
         return render_template("login.html", error=error,title="Login",y=y,form=form)
 
 class RegistrationForm(FlaskForm):
+    role = get_role()
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
@@ -142,7 +150,7 @@ class RegistrationForm(FlaskForm):
     confirm = PasswordField('Repeat Password')
     address = StringField('Address', validators=[DataRequired()])
 
-@app.route('/port-dashboard/register/', methods=["GET","POST"])
+@app.route('/register/', methods=["GET","POST"])
 @login_required
 def register_page():
     try:
@@ -175,64 +183,20 @@ def register_page():
                     flash("Thanks for registering!")
 
                     return redirect(url_for('login_page'))
-        webhook()
-        msg = unreadmsg()
-        if msg == 0:
-            s = ''
-        else:
-            s = unreadmsg()
-        unread = getUnreadmsg()
-        visit = countVisitors()
-        return render_template("register.html", form=form,title="Registration Form",role=role,unread=unread,visit=visit)
+
+        return render_template("register.html", form=form,title="Registration Form",role=role)
 
     except Exception as e:
         return(str(e))
 
 
-@app.route('/port-dashboard/')
+@app.route('/dashboard/')
 @login_required
 def dashboard():
-    webhook()
-    msg = unreadmsg()
-    if msg == 0:
-        s = ''
-    else:
-        s = unreadmsg()
-    unread = getUnreadmsg()
-    visit = countVisitors()
-    return render_template("admin/dashboard.html",title="Dashboard",s=s,unread=unread,visit=visit)
-
-@app.route('/port-dashboard/message/<int:id>')
-@login_required
-def messages(id):
-    webhook()
-    msg = unreadmsg()
-    if msg == 0:
-        s = ''
-    else:
-        s = unreadmsg()
-    unread = getUnreadmsg()
-    visit = countVisitors()
-    return render_template("admin/messages.html",title="Dashboard",s=s,unread=unread,visit=visit)
-
-@app.route('/port-dashboard/visitor/')
-@login_required
-def visitor():
-    webhook()
-    msg = unreadmsg()
-    if msg == 0:
-        s = ''
-    else:
-        s = unreadmsg()
-    unread = getUnreadmsg()
-    visit = countVisitors()
-    guest = getVisitors()
-    countAll = visitorCountAll()
-    return render_template("admin/visitors.html",title="Dashboard",s=s,unread=unread,visit=visit,guest=guest)
+    return render_template("admin/dashboard.html",title="Dashboard")
 
 @app.errorhandler(404)
 def page_not_found(e):
-    webhook()
     return render_template("error/page_not_found.html")
 
 if __name__ == "__main__":
