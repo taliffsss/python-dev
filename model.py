@@ -9,7 +9,6 @@ from flask import request
 
 #Set TimeZone
 os.environ['TZ'] = 'Asia/Manila'
-time.tzset()
 
 #Current Date Time
 now = datetime.datetime.now()
@@ -128,11 +127,11 @@ def register(uname,password,email,firstname,lastname,role,address):
 def msgme(name,msg):
 
 	if conn.open:
-		c.execute("INSERT INTO msg_me (name, msg, created_at) VALUES (%s, %s, %s)",(thwart(name), thwart(msg), timestamp))
+		c.execute("INSERT INTO msg_me (name, msg, ip, created_at) VALUES (%s, %s, %s, %s)",(thwart(name), thwart(msg), thwart(request.remote_addr), timestamp))
 
 		conn.commit()
 	else:
-		e.execute("INSERT INTO msg_me (name, msg, created_at) VALUES (%s, %s, %s)",(thwart(name), thwart(msg), timestamp))
+		e.execute("INSERT INTO msg_me (name, msg, ip, created_at) VALUES (%s, %s, %s, %s)",(thwart(name), thwart(msg), thwart(request.remote_addr), timestamp))
 
 		catch.commit()
 
@@ -161,24 +160,14 @@ def unreadmsg():
 def getUnreadmsg():
 
 	if conn.open:
-		data = c.execute("SELECT * FROM msg_me WHERE unread IS NULL ")
+		data = c.execute("SELECT * FROM msg_me")
 		data = c.fetchall()
 		return data
 	else:
-		data = e.execute("SELECT * FROM msg_me WHERE unread IS NULL ")
+		data = e.execute("SELECT * FROM msg_me")
 		data = e.fetchall()
 		return data
 
-def getdays():
-
-	if conn.open:
-		data = c.execute("SELECT DISTINCT dates FROM webhooks WHERE dates >= DATE(NOW()) - INTERVAL 7 DAY")
-		data = c.fetchall()
-		return data
-	else:
-		data = e.execute("SELECT DISTINCT dates FROM webhooks WHERE dates >= DATE(NOW()) - INTERVAL 7 DAY")
-		data = e.fetchall()
-		return data
 
 def countVisitors():
 
