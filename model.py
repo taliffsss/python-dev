@@ -160,14 +160,44 @@ def unreadmsg():
 def getUnreadmsg():
 
 	if conn.open:
-		data = c.execute("SELECT * FROM msg_me")
+		data = c.execute("SELECT * FROM msg_me WHERE unread IS NULL")
 		data = c.fetchall()
 		return data
 	else:
-		data = e.execute("SELECT * FROM msg_me")
+		data = e.execute("SELECT * FROM msg_me WHERE unread IS NULL")
 		data = e.fetchall()
 		return data
 
+def getAllMessage():
+
+	if conn.open:
+		data = c.execute("SELECT * FROM msg_me ORDER BY created_at DESC ")
+		data = c.fetchall()
+		return data
+	else:
+		data = e.execute("SELECT * FROM msg_me ORDER BY created_at DESC ")
+		data = e.fetchall()
+		return data
+
+def getMessage(msgid):
+	if conn.open:
+		data = c.execute("SELECT * FROM msg_me WHERE id = (%s)",(msgid,))
+		data = c.fetchall()
+		return data
+	else:
+		data = e.execute("SELECT * FROM msg_me WHERE id = (%s)",(msgid,))
+		data = e.fetchall()
+		return data
+
+def updateMessage(msgid):
+	if conn.open:
+		data = c.execute("UPDATE `msg_me` SET `unread` = '1' WHERE id = (%s)",(msgid,))
+		data = c.fetchall()
+		return data
+	else:
+		data = e.execute("UPDATE `msg_me` SET `unread` = '1' WHERE id = (%s)",(msgid,))
+		data = e.fetchall()
+		return data
 
 def countVisitors():
 

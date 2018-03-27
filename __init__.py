@@ -13,7 +13,7 @@ import gc
 import datetime
 import pytz
 from pytz import timezone
-from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll
+from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import subprocess
@@ -33,7 +33,7 @@ TOPIC_DICT = Content()
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
-proxies = ('209.146.28.238','203.82.37.6', '208.80.194.29', '208.80.194.30','208.80.194.31', '208.80.194.32','208.80.194.33', '208.80.194.35','121.58.234.74','112.200.108.51','46.243.189.60','27.145.67.10','89.252.163.56','123.141.64.130','114.18.75.220','46.243.189.99','185.232.65.203','212.83.150.74')
+proxies = ('110.54.244.105','209.146.28.238','203.82.37.6', '208.80.194.29', '208.80.194.30','208.80.194.31', '208.80.194.32','208.80.194.33', '208.80.194.35','121.58.234.74','112.200.108.51','46.243.189.60','27.145.67.10','89.252.163.56','123.141.64.130','114.18.75.220','46.243.189.99','185.232.65.203','212.83.150.74')
 
 fpath = app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 fmax = app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -210,20 +210,23 @@ def dashboard():
     unread = getUnreadmsg()
     visit = countVisitors()
     list = getUnreadmsg()
-    return render_template("admin/dashboard.html",title="Dashboard",s=s,unread=unread,visit=visit,list=list)
+    msglist = getAllMessage()
+    return render_template("admin/dashboard.html",title="Dashboard",s=s,unread=unread,visit=visit,list=list,msglist=msglist)
 
-@app.route('/port-dashboard/message/<int:id>')
+@app.route('/port-dashboard/message/<int:msgid>')
 @login_required
-def messages(id):
+def messages(msgid):
     webhook()
+    updateMessage(msgid)
     msg = unreadmsg()
     if msg == 0:
         s = ''
     else:
         s = unreadmsg()
     unread = getUnreadmsg()
+    rmsg = getMessage(msgid)
     visit = countVisitors()
-    return render_template("admin/messages.html",title="Dashboard",s=s,unread=unread,visit=visit)
+    return render_template("admin/message.html",title="Dashboard",s=s,unread=unread,visit=visit,rmsg=rmsg)
 
 @app.route('/port-dashboard/visitor/')
 @login_required

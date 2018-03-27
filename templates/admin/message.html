@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+
+{% block body %}
+	<br>
+	<br>
+	<div class="container">
+		{% for r in rmsg %}
+			<h4><b>Name:</b> <small>{{r[1]}}</small></h4>
+			<br>
+			<span><b>Date:</b> {{r[5]}}</span>
+			<br>
+			<br>
+			<h4><b>Message:</b></h4>
+			<p>{{r[2]}}</p>
+		{% endfor %}
+	</div>
+{% endblock %}
