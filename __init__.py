@@ -13,7 +13,7 @@ import gc
 import datetime
 import pytz
 from pytz import timezone
-from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage, block_ip
+from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage, block_ip, check_ip, block_client_ip, block_ip
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import subprocess
@@ -27,6 +27,12 @@ UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 y = now.year
+
+#Set TimeZone
+os.environ['TZ'] = 'Asia/Manila'
+
+#Current Date
+d = now.strftime('%Y-%m-%d')
 
 TOPIC_DICT = Content()
 
@@ -51,7 +57,8 @@ def homepage():
             msgme(name,msg)
             return redirect(url_for("homepage"))
 
-        webhook()
+        if request.remote_addr != '202.151.35.180':
+            webhook()
         return render_template("home.html", TOPIC_DICT = TOPIC_DICT, title="Home", y=y, form=form)
     except Exception as e:
         return(str(e))
@@ -61,7 +68,7 @@ def limit_remote_addr():
     remote = request.remote_addr
     ip = block_ip()
     for c in ip:
-        clientip = c[0]
+        clientip = c[1]
 	if remote == clientip:
 		abort(403)
 
@@ -83,7 +90,8 @@ def logout():
     uname = session['username']
     uid = get_id(uname)
     logout_update(uid)
-    webhook()
+    if request.remote_addr != '202.151.35.180':
+        webhook()
     session.clear()
     flash("You have been logged out!")
     gc.collect()
@@ -132,7 +140,8 @@ def login_page():
                     error = "Invalid credentials, try again."
 
             gc.collect()
-            webhook()
+            if request.remote_addr != '202.151.35.180':
+                webhook()
             return render_template("login.html", error=error,title="Login",y=y,form=form)
 
     except Exception as e:
@@ -181,11 +190,13 @@ def register_page():
                     return render_template('register.html', form=form,title="Registration Form",role=role)
                 else:
                     register(uname,password,email,firstname,lastname,role,address)
-                    
+
                     flash("Thanks for registering!")
 
                     return redirect(url_for('login_page'))
-        webhook()
+
+        if request.remote_addr != '202.151.35.180':
+            webhook()
         msg = unreadmsg()
         if msg == 0:
             s = ''
@@ -193,16 +204,20 @@ def register_page():
             s = unreadmsg()
         unread = getUnreadmsg()
         visit = countVisitors()
-        return render_template("register.html", form=form,title="Registration Form",role=role,unread=unread,visit=visit)
+        return render_template("register.html", form=form,title="Registration Form",role=role,unread=unread,visit=visit,d=d)
 
     except Exception as e:
         return(str(e))
 
+class BlockClientIP(FlaskForm):
+    clientip = StringField('Client IP', validators=[DataRequired()])
 
 @app.route('/port-dashboard/')
 @login_required
 def dashboard():
-    webhook()
+
+    if request.remote_addr != '202.151.35.180':
+        webhook()
     msg = unreadmsg()
     if msg == 0:
         s = ''
@@ -212,12 +227,15 @@ def dashboard():
     visit = countVisitors()
     list = getUnreadmsg()
     msglist = getAllMessage()
-    return render_template("admin/dashboard.html",title="Dashboard",s=s,unread=unread,visit=visit,list=list,msglist=msglist)
+    blockip = BlockClientIP(request.form)
+    return render_template("admin/dashboard.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,msglist=msglist,d=d)
 
 @app.route('/port-dashboard/message/<int:msgid>')
 @login_required
 def messages(msgid):
-    webhook()
+
+    if request.remote_addr != '202.151.35.180':
+        webhook()
     updateMessage(msgid)
     msg = unreadmsg()
     if msg == 0:
@@ -227,12 +245,15 @@ def messages(msgid):
     unread = getUnreadmsg()
     rmsg = getMessage(msgid)
     visit = countVisitors()
-    return render_template("admin/message.html",title="Dashboard",s=s,unread=unread,visit=visit,rmsg=rmsg)
+    blockip = BlockClientIP(request.form)
+    return render_template("admin/messages.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,rmsg=rmsg,d=d)
 
 @app.route('/port-dashboard/visitor/')
 @login_required
 def visitor():
-    webhook()
+
+    if request.remote_addr != '202.151.35.180':
+        webhook()
     msg = unreadmsg()
     if msg == 0:
         s = ''
@@ -242,11 +263,69 @@ def visitor():
     visit = countVisitors()
     guest = getVisitors()
     countAll = visitorCountAll()
-    return render_template("admin/visitors.html",title="Dashboard",s=s,unread=unread,visit=visit,guest=guest)
+    blockip = BlockClientIP(request.form)
+    return render_template("admin/visitors.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,guest=guest)
+
+@app.route('/port-dashboard/block-ip/', methods=["GET","POST"])
+@login_required
+def client_ip():
+    try:
+        msg = unreadmsg()
+        if msg == 0:
+            s = ''
+        else:
+            s = unreadmsg()
+        unread = getUnreadmsg()
+        visit = countVisitors()
+        msglist = getAllMessage()
+        if request.remote_addr != '202.151.35.180':
+            webhook()
+        blockip = BlockClientIP(request.form)
+
+        if request.method == "POST" and blockip.validate():
+
+            clientip  = blockip.clientip.data
+
+            x = check_ip(clientip)
+
+            if int(x) > 0:
+                flash("That IP is already exist")
+                return render_template('admin/dashboard.html',blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,msglist=msglist,d=d)
+
+            else:
+                block_client_ip(clientip)
+
+                flash("Successfully added")
+
+                return redirect(url_for('dashboard'))
+
+        return render_template("admin/dashboard.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,msglist=msglist,d=d)
+
+    except Exception as e:
+        return(str(e))
+
+@app.route('/port-dashboard/block-ip-list/')
+@login_required
+def block_list():
+
+    if request.remote_addr != '202.151.35.180':
+        webhook()
+    msg = unreadmsg()
+    if msg == 0:
+        s = ''
+    else:
+        s = unreadmsg()
+    unread = getUnreadmsg()
+    visit = countVisitors()
+    msglist = getAllMessage()
+    blockip = BlockClientIP(request.form)
+    blocklist = block_ip()
+    return render_template("admin/block-list.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,msglist=msglist,blocklist=blocklist,d=d)
 
 @app.errorhandler(404)
 def page_not_found(e):
-    webhook()
+    if request.remote_addr != '202.151.35.180':
+        webhook()
     return render_template("error/page_not_found.html")
 
 if __name__ == "__main__":

@@ -15,6 +15,10 @@ now = datetime.datetime.now()
 
 timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
 dates = now.strftime('%Y-%m-%d')
+y = now.year
+yMonth = now.strftime('%Y-%m')
+
+int = '1'
 
 #Set Database Connection
 c, conn = connection()
@@ -138,11 +142,11 @@ def msgme(name,msg):
 def webhook():
 
 	if conn.open:
-		c.execute("INSERT INTO webhooks (url, ip, dates, created_at) VALUES (%s, %s, %s, %s)",(thwart(request.url), thwart(request.remote_addr), dates, timestamp))
+		c.execute("INSERT INTO webhooks (url, ip, dates, created_at, y_month, year) VALUES (%s, %s, %s, %s, %s, %s)",(thwart(request.url), thwart(request.remote_addr), dates, timestamp, yMonth, y))
 
 		conn.commit()
 	else:
-		e.execute("INSERT INTO webhooks (url, ip, dates, created_at) VALUES (%s, %s, %s, %s)",(thwart(request.url), thwart(request.remote_addr), dates, timestamp))
+		e.execute("INSERT INTO webhooks (url, ip, dates, created_at, y_month, year) VALUES (%s, %s, %s, %s, %s, %s)",(thwart(request.url), thwart(request.remote_addr), dates, timestamp, yMonth, y))
 
 		catch.commit()
 
@@ -236,10 +240,32 @@ def visitorCountAll():
 def block_ip():
 
 	if conn.open:
-		data = c.execute("SELECT ip FROM block_ip")
+		data = c.execute("SELECT * FROM block_ip")
 		data = c.fetchall()
 		return data
 	else:
-		data = e.execute("SELECT ip FROM block_ip")
+		data = e.execute("SELECT * FROM block_ip")
 		data = e.fetchall()
 		return data
+
+def check_ip(clientip):
+
+	if conn.open:
+		data = c.execute("SELECT * FROM block_ip WHERE ip = (%s)",(clientip,))
+
+		return data
+	else:
+		data = e.execute("SELECT * FROM block_ip WHERE ip = (%s)",(clientip,))
+
+		return data
+
+def block_client_ip(clientip):
+
+	if conn.open:
+		c.execute("INSERT INTO block_ip (ip, block, created_at) VALUES (%s, %s, %s)",(thwart(clientip), timestamp, thwart(int)))
+
+		conn.commit()
+	else:
+		e.execute("INSERT INTO webhooks (ip, block, created_at) VALUES (%s, %s, %s)",(thwart(clientip), timestamp, thwart(int)))
+
+		catch.commit()
