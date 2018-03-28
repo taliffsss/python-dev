@@ -232,3 +232,14 @@ def visitorCountAll():
 		data = e.execute("SELECT DISTINCT ip FROM webhooks")
 		count = e.rowcount
 		return count
+
+def block_ip():
+
+	if conn.open:
+		data = c.execute("SELECT ip FROM block_ip")
+		data = c.fetchall()
+		return data
+	else:
+		data = e.execute("SELECT ip FROM block_ip")
+		data = e.fetchall()
+		return data
