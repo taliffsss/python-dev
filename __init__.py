@@ -13,7 +13,7 @@ import gc
 import datetime
 import pytz
 from pytz import timezone
-from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage, block_ip, check_ip, block_client_ip, block_ip
+from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage, block_ip, check_ip, block_client_ip, block_ip, getIDBlock_ip, updateBlock_ip, getAllBlock_ip
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import subprocess
@@ -68,10 +68,9 @@ def limit_remote_addr():
     remote = request.remote_addr
     ip = block_ip()
     for c in ip:
-        clientip = c[1]
-	if remote == clientip:
-		abort(403)
-
+        bip = c[1]
+        if remote == bip:
+            abort(403)
 
 def login_required(f):
     @wraps(f)
@@ -319,8 +318,42 @@ def block_list():
     visit = countVisitors()
     msglist = getAllMessage()
     blockip = BlockClientIP(request.form)
-    blocklist = block_ip()
+    blocklist = getAllBlock_ip()
     return render_template("admin/block-list.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,msglist=msglist,blocklist=blocklist,d=d)
+
+@app.route('/port-dashboard/block-ip-list/unblock/<int:blockid>', methods=["GET","POST"])
+@login_required
+def unblock_client_ip(blockid):
+    try:
+        c = getIDBlock_ip(blockid)
+        cbid = 0
+        if int(c) > 0:
+            updateBlock_ip(blockid,cbid)
+            flash("Successfully Update")
+            return redirect(url_for('block_list'))
+        else:
+            flash("Invalid ID")
+            return redirect(url_for('block_list'))
+
+    except Exception as e:
+        return(str(e))
+
+@app.route('/port-dashboard/block-ip-list/block/<int:blockid>', methods=["GET","POST"])
+@login_required
+def blockClient_ip(blockid):
+    try:
+        c = getIDBlock_ip(blockid)
+        cbid = 1
+        if int(c) > 0:
+            updateBlock_ip(blockid,cbid)
+            flash("Successfully Update")
+            return redirect(url_for('block_list'))
+        else:
+            flash("Invalid ID")
+            return redirect(url_for('block_list'))
+
+    except Exception as e:
+        return(str(e))
 
 @app.errorhandler(404)
 def page_not_found(e):

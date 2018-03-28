@@ -18,7 +18,7 @@ dates = now.strftime('%Y-%m-%d')
 y = now.year
 yMonth = now.strftime('%Y-%m')
 
-int = '1'
+intip = '1'
 
 #Set Database Connection
 c, conn = connection()
@@ -240,6 +240,17 @@ def visitorCountAll():
 def block_ip():
 
 	if conn.open:
+		data = c.execute("SELECT * FROM block_ip WHERE block = 1")
+		data = c.fetchall()
+		return data
+	else:
+		data = e.execute("SELECT * FROM block_ip WHERE block = 1")
+		data = e.fetchall()
+		return data
+
+def getAllBlock_ip():
+
+	if conn.open:
 		data = c.execute("SELECT * FROM block_ip")
 		data = c.fetchall()
 		return data
@@ -247,6 +258,7 @@ def block_ip():
 		data = e.execute("SELECT * FROM block_ip")
 		data = e.fetchall()
 		return data
+
 
 def check_ip(clientip):
 
@@ -262,10 +274,32 @@ def check_ip(clientip):
 def block_client_ip(clientip):
 
 	if conn.open:
-		c.execute("INSERT INTO block_ip (ip, block, created_at) VALUES (%s, %s, %s)",(thwart(clientip), timestamp, thwart(int)))
+		c.execute("INSERT INTO block_ip (ip, block, created_at) VALUES (%s, %s, %s)",(thwart(clientip), thwart(intip), timestamp))
 
 		conn.commit()
 	else:
-		e.execute("INSERT INTO webhooks (ip, block, created_at) VALUES (%s, %s, %s)",(thwart(clientip), timestamp, thwart(int)))
+		e.execute("INSERT INTO webhooks (ip, block, created_at) VALUES (%s, %s, %s)",(thwart(clientip), thwart(intip), timestamp))
+
+		catch.commit()
+
+def getIDBlock_ip(blockid):
+
+	if conn.open:
+		data = c.execute("SELECT * FROM block_ip WHERE id = (%s)",(blockid,))
+
+		return data
+	else:
+		data = e.execute("SELECT * FROM block_ip WHERE id = (%s)",(blockid,))
+
+		return data
+
+def updateBlock_ip(blockid,cbid):
+
+	if conn.open:
+		data = c.execute("UPDATE block_ip SET block = %s WHERE id = %s",(cbid,blockid))
+
+		conn.commit()
+	else:
+		data = e.execute("UPDATE block_ip SET block = %s WHERE id = %s",(cbid,blockid))
 
 		catch.commit()
