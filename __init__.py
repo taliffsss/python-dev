@@ -13,7 +13,7 @@ import gc
 import datetime
 import pytz
 from pytz import timezone
-from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage, block_ip, check_ip, block_client_ip, block_ip, getIDBlock_ip, updateBlock_ip, getAllBlock_ip
+from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage, block_ip, check_ip, block_client_ip, block_ip, getIDBlock_ip, updateBlock_ip, getAllBlock_ip, getVisitorsoftheDay, verifyParam
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import subprocess
@@ -263,7 +263,38 @@ def visitor():
     guest = getVisitors()
     countAll = visitorCountAll()
     blockip = BlockClientIP(request.form)
-    return render_template("admin/visitors.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,guest=guest)
+    return render_template("admin/visitors.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,guest=guest,d=d)
+
+@app.route('/port-dashboard/visitor/<datesNow>')
+@login_required
+def visitor_now(datesNow):
+
+    try:
+        if request.remote_addr != '202.151.35.180':
+            webhook()
+
+        c = verifyParam(datesNow)
+
+        if int(c) > 0:
+            msg = unreadmsg()
+            if msg == 0:
+                s = ''
+            else:
+                s = unreadmsg()
+            unread = getUnreadmsg()
+            visit = countVisitors()
+            guest = getVisitorsoftheDay(datesNow)
+            countAll = visitorCountAll()
+            blockip = BlockClientIP(request.form)
+
+            return render_template("admin/visitor_of_the_day.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,guest=guest)
+
+        else:
+
+            return render_template("error/page_not_found.html",title="Page Not Found")
+
+    except Exception as e:
+        return(str(e))
 
 @app.route('/port-dashboard/block-ip/', methods=["GET","POST"])
 @login_required
@@ -359,7 +390,7 @@ def blockClient_ip(blockid):
 def page_not_found(e):
     if request.remote_addr != '202.151.35.180':
         webhook()
-    return render_template("error/page_not_found.html")
+    return render_template("error/page_not_found.html",title="Page Not Found")
 
 if __name__ == "__main__":
     app.run()

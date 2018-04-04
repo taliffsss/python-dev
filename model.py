@@ -226,6 +226,28 @@ def getVisitors():
 		data = e.fetchall()
 		return data
 
+def getVisitorsoftheDay(datesNow):
+
+	if conn.open:
+		data = c.execute("SELECT * FROM webhooks WHERE dates = (%s) ORDER BY created_at DESC",(datesNow,))
+		data = c.fetchall()
+		return data
+	else:
+		data = e.execute("SELECT * FROM webhooks WHERE dates = (%s) ORDER BY created_at DESC",(datesNow,))
+		data = e.fetchall()
+		return data
+
+def verifyParam(datesNow):
+
+	if conn.open:
+		data = c.execute("SELECT * FROM webhooks WHERE dates LIKE (%s)",(datesNow,))
+		count = c.rowcount
+		return count
+	else:
+		data = e.execute("SELECT * FROM webhooks WHERE dates LIKE (%s)",(datesNow,))
+		count = e.rowcount
+		return count
+
 def visitorCountAll():
 
 	if conn.open:
