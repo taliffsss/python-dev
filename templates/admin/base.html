@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en" class="fontawesome-i2svg-pending">
 	<head>
@@ -29,7 +30,7 @@
 						<span></span>
 					</li>
 				</ul>
-				<a href="/port-dashboard/visitor/{{d}}" id="unread">Visitors of the Day <small class="badge badge-danger">{{visit}}</small></a>
+				<a href="/py-dashboard/visitor/{{d}}" id="unread">Visitors of the Day <small class="badge badge-danger">{{visit}}</small></a>
 				<div class="dropdown show mr-sm-4">
 					<a class="nav-link" href="#" id="unread" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Notifications <span class="badge badge-danger">{{s}}</span>
@@ -38,7 +39,7 @@
 						<div class="dropdown-menu" aria-labelledby="unread">
 					{% endfor%}
 							{% for u in unread %}
-								<a class="dropdown-item" href="/port-dashboard/message/{{u[0]}}"> {{u[1]}} </a>
+								<a class="dropdown-item" href="/py-dashboard/message/{{u[0]}}"> {{u[1]}} </a>
 							{% endfor%}
 					{% for u in unread %}
 						</div>
@@ -53,7 +54,7 @@
 							<div class="dropdown-menu info-dropdown" aria-labelledby="info-setting">
 								<a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i> Settings</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="/port-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+								<a class="dropdown-item" href="/py-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 							</div>
 						</li>
 					</ul>
@@ -71,14 +72,14 @@
 						<a href="#"><i class="fas fa-address-card"></i> Client IP<span class="arrow"></span></a>
 					</li>
 					<ul class="sub-menu collapse" id="products">
-						<li><a href="/port-dashboard/block-ip-list/"><i class="fas fa-list-ul"></i> List</a></li>
+						<li><a href="/py-dashboard/block-ip-list/"><i class="fas fa-list-ul"></i> List</a></li>
 						<li><a href="#" data-toggle="modal" data-target="#ipblock"><i class="fas fa-ban"></i> Block IP</a></li>
 					</ul>
 					<li data-toggle="collapse" data-target="#service" class="collapsed">
 						<a href="#"><i class="fas fa-users"></i> Visitors <span class="arrow"></span></a>
 					</li>
 					<ul class="sub-menu collapse" id="service">
-						<li><a href="/port-dashboard/visitor/"><i class="fas fa-list-ul"></i> List</a></li>
+						<li><a href="/py-dashboard/visitor/"><i class="fas fa-list-ul"></i> List</a></li>
 					</ul>
 					<!--<li data-toggle="collapse" data-target="#new" class="collapsed">
 						<a href="#"><i class="fas fa-car"></i> New <span class="arrow"></span></a>
@@ -116,7 +117,7 @@
 				</div>
 				<div class="modal-body">
 					{% from "_formhelpers.html" import render_field %}
-					<form action="/port-dashboard/block-ip/" method="POST" class="form-inline">
+					<form action="/py-dashboard/block-ip/" method="POST" class="form-inline">
 						{{ blockip.csrf_token }}
 						{{blockip.clientip(class_="form-control",placeholder="Client IP",required="required")}}
 						&nbsp;&nbsp;<button class="btn btn-info">Block IP</button>
@@ -140,3 +141,4 @@
 		<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 	</footer>
 </html>
+

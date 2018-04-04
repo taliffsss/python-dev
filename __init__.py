@@ -83,7 +83,7 @@ def login_required(f):
 
     return wrap
 
-@app.route("/port-logout/")
+@app.route("/py-logout/")
 @login_required
 def logout():
     uname = session['username']
@@ -114,7 +114,7 @@ class loginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = StringField('Password', validators=[DataRequired()])
 
-@app.route('/port-login/', methods=["GET","POST"])
+@app.route('/py-login/', methods=["GET","POST"])
 def login_page():
     error = ''
     try:
@@ -160,7 +160,7 @@ class RegistrationForm(FlaskForm):
     confirm = PasswordField('Repeat Password')
     address = StringField('Address', validators=[DataRequired()])
 
-@app.route('/port-dashboard/register/', methods=["GET","POST"])
+@app.route('/py-dashboard/register/', methods=["GET","POST"])
 @login_required
 def register_page():
     try:
@@ -211,7 +211,7 @@ def register_page():
 class BlockClientIP(FlaskForm):
     clientip = StringField('Client IP', validators=[DataRequired()])
 
-@app.route('/port-dashboard/')
+@app.route('/py-dashboard/')
 @login_required
 def dashboard():
 
@@ -229,7 +229,7 @@ def dashboard():
     blockip = BlockClientIP(request.form)
     return render_template("admin/dashboard.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,msglist=msglist,d=d)
 
-@app.route('/port-dashboard/message/<int:msgid>')
+@app.route('/py-dashboard/message/<int:msgid>')
 @login_required
 def messages(msgid):
 
@@ -247,7 +247,7 @@ def messages(msgid):
     blockip = BlockClientIP(request.form)
     return render_template("admin/messages.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,rmsg=rmsg,d=d)
 
-@app.route('/port-dashboard/visitor/')
+@app.route('/py-dashboard/visitor/')
 @login_required
 def visitor():
 
@@ -265,7 +265,7 @@ def visitor():
     blockip = BlockClientIP(request.form)
     return render_template("admin/visitors.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,guest=guest,d=d)
 
-@app.route('/port-dashboard/visitor/<datesNow>')
+@app.route('/py-dashboard/visitor/<datesNow>')
 @login_required
 def visitor_now(datesNow):
 
@@ -296,7 +296,7 @@ def visitor_now(datesNow):
     except Exception as e:
         return(str(e))
 
-@app.route('/port-dashboard/block-ip/', methods=["GET","POST"])
+@app.route('/py-dashboard/block-ip/', methods=["GET","POST"])
 @login_required
 def client_ip():
     try:
@@ -334,7 +334,7 @@ def client_ip():
     except Exception as e:
         return(str(e))
 
-@app.route('/port-dashboard/block-ip-list/')
+@app.route('/py-dashboard/block-ip-list/')
 @login_required
 def block_list():
 
@@ -352,7 +352,7 @@ def block_list():
     blocklist = getAllBlock_ip()
     return render_template("admin/block-list.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,msglist=msglist,blocklist=blocklist,d=d)
 
-@app.route('/port-dashboard/block-ip-list/unblock/<int:blockid>', methods=["GET","POST"])
+@app.route('/py-dashboard/block-ip-list/unblock/<int:blockid>', methods=["GET","POST"])
 @login_required
 def unblock_client_ip(blockid):
     try:
@@ -369,7 +369,7 @@ def unblock_client_ip(blockid):
     except Exception as e:
         return(str(e))
 
-@app.route('/port-dashboard/block-ip-list/block/<int:blockid>', methods=["GET","POST"])
+@app.route('/py-dashboard/block-ip-list/block/<int:blockid>', methods=["GET","POST"])
 @login_required
 def blockClient_ip(blockid):
     try:
