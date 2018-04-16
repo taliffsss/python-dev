@@ -20,6 +20,7 @@ import subprocess
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from flask_paginate import Pagination, get_page_parameter
+import pusher
 
 now = datetime.datetime.now()
 
@@ -41,6 +42,15 @@ bootstrap = Bootstrap(app)
 
 fpath = app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 fmax = app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+pusher_client = pusher.Pusher(
+    app_id='509926',
+    key='8dc7bc334b8e2605d78c',
+    secret='bdbdd7218151ff11a246',
+    cluster='ap1',
+    ssl=True
+)
+pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
 
 class Message(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])

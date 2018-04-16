@@ -9,6 +9,18 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+		<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+		<script>
+			Pusher.logToConsole = true;
+			var pusher = new Pusher('8dc7bc334b8e2605d78c', {
+				cluster: 'ap1',
+				encrypted: true
+			});
+			var channel = pusher.subscribe('my-channel');
+			channel.bind('my-event', function(data) {
+				alert(data.message);
+			});
+		</script>
 	</head>
 	<body>
 		<br>
