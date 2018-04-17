@@ -13,6 +13,19 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+                <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+                <script>
+                        Pusher.logToConsole = true;
+                        var pusher = new Pusher('0d3d93458b799c00839c', {
+                                cluster: 'ap1',
+                                encrypted: true
+                        });
+                        var channel = pusher.subscribe('my-channel');
+                        channel.bind('my-event', function(data) {
+                                alert(data.message);
+                        });
+                </script>
+
 	</head>
 	<body>
 		<img class="img-fluid" id="banner" src="{{ url_for('static', filename='img/wp1828955.jpg') }}">

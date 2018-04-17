@@ -55,11 +55,11 @@
 					</td>
 					<td>
 					{% if b[2] == 1 %}
-						<a href="/port-dashboard/block-ip-list/unblock/{{b[0]}}" class="text-info"><i class="fas fa-thumbs-up"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="/py-dashboard/block-ip-list/unblock/{{b[0]}}" class="text-info"><i class="fas fa-thumbs-up"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 					{% else: %}
-						<a href="/port-dashboard/block-ip-list/block/{{b[0]}}" class="text-danger"><i class="fas fa-ban"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="/py-dashboard/block-ip-list/block/{{b[0]}}" class="text-danger"><i class="fas fa-ban"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 					{% endif %}
-						<a href="/port-dashboard/block-ip-list/remove/{{b[0]}}"><i class="fas fa-trash" aria-hidden="true"></i></a>
+						<a href="/py-dashboard/block-ip-list/remove/{{b[0]}}"><i class="fas fa-trash" aria-hidden="true"></i></a>
 					</td>
 				</tr>
 				{% endfor %}

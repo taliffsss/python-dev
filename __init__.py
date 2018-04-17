@@ -13,7 +13,7 @@ import gc
 import datetime
 import pytz
 from pytz import timezone
-from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage, block_ip, check_ip, block_client_ip, block_ip, getIDBlock_ip, updateBlock_ip, getAllBlock_ip, getVisitorsoftheDay, verifyParam
+from model import check_username, get_id, tracked_loggedin, logout_update, register, unique_username, unique_email, get_role, msgme, webhook, unreadmsg, getUnreadmsg, countVisitors, getVisitors, visitorCountAll, getMessage, updateMessage, getAllMessage, block_ip, check_ip, block_client_ip, block_ip, getIDBlock_ip, updateBlock_ip, getAllBlock_ip, getVisitorsoftheDay, verifyParam, removeIP
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import subprocess
@@ -44,13 +44,13 @@ fpath = app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 fmax = app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 pusher_client = pusher.Pusher(
-    app_id='509926',
-    key='8dc7bc334b8e2605d78c',
-    secret='bdbdd7218151ff11a246',
+    app_id='509979',
+    key='0d3d93458b799c00839c',
+    secret='8f112e2f0bd4bc02244f',
     cluster='ap1',
     ssl=True
 )
-pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
+#pusher_client.trigger('my-channel', 'my-event', {'message': 'Python Portfolio'})
 
 class Message(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -388,6 +388,23 @@ def blockClient_ip(blockid):
         if int(c) > 0:
             updateBlock_ip(blockid,cbid)
             flash("Successfully Update")
+            return redirect(url_for('block_list'))
+        else:
+            flash("Invalid ID")
+            return redirect(url_for('block_list'))
+
+    except Exception as e:
+        return(str(e))
+
+@app.route('/py-dashboard/block-ip-list/remove/<int:blockid>', methods=["GET","POST"])
+@login_required
+def reoveBlockIP(blockid):
+    try:
+        c = getIDBlock_ip(blockid)
+
+        if int(c) > 0:
+            removeIP(blockid)
+            flash("Data has been Deleted")
             return redirect(url_for('block_list'))
         else:
             flash("Invalid ID")

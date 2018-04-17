@@ -325,3 +325,14 @@ def updateBlock_ip(blockid,cbid):
 		data = e.execute("UPDATE block_ip SET block = %s WHERE id = %s",(cbid,blockid))
 
 		catch.commit()
+
+def removeIP(blockid):
+
+	if conn.open:
+		data = c.execute("DELETE FROM block_ip WHERE id = (%s)",(blockid,))
+
+		conn.commit()
+	else:
+		data = e.execute("DELETE FROM block_ip WHERE id = (%s)",(blockid,))
+
+		catch.commit()
