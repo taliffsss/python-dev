@@ -297,7 +297,7 @@ def visitor_now(datesNow):
             countAll = visitorCountAll()
             blockip = BlockClientIP(request.form)
 
-            return render_template("admin/visitor_of_the_day.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,guest=guest)
+            return render_template("admin/visitor_of_the_day.html",blockip=blockip,title="Dashboard",s=s,unread=unread,visit=visit,guest=guest,d=d)
 
         else:
 
